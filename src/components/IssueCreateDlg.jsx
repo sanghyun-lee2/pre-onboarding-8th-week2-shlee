@@ -27,7 +27,7 @@ function IssueCreateDlg(props) {
    const [issueTitle, setIssueTitle] = useState("");
    const [issueEndDate, setIssueEndDate] = useState();
    const [issueContents, setIssueContents] = useState("");
-   const [issueStatus, setIssueStatus] = useState("");
+   const [issueStatus, setIssueStatus] = useState("todo");
 
    const issueTitleInputHandler = (e) => {
       setIssueTitle(e.target.value);

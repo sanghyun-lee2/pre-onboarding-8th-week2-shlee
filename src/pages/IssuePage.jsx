@@ -2,12 +2,11 @@ import React, { useState } from "react";
 
 import IssueCreateDlg from "../components/IssueCreateDlg";
 import IssueModifyDlg from "../components/IssueModifyDlg";
-import IssueCard from "../components/IssueCard";
+import IssueCardList from "../components/IssueCardList";
 
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 
-import "./IssuePage.css";
+import styled from "styled-components";
 
 const issueTemp = [
    {
@@ -48,8 +47,8 @@ function IssuePage() {
 
    const createIssueItem = (issueData) => {
       issueData.id = issueList.length + 1;
-      //setIssueList([...issueList], issueData);
-      setIssueList(issueList.concat(issueData));
+      const newIssueList = issueList.concat(issueData);
+      setIssueList(newIssueList);
    };
 
    const modifyIssueItem = (issueData) => {
@@ -61,7 +60,6 @@ function IssuePage() {
          }
       });
       setIssueList(newIssueList);
-      console.log(newIssueList);
    };
 
    const handleCreateDlgOpen = () => {
@@ -83,9 +81,6 @@ function IssuePage() {
 
    return (
       <div>
-         <Button variant="outlined" onClick={handleCreateDlgOpen}>
-            새로 만들기
-         </Button>
          <IssueCreateDlg
             IssueCreate={createIssueItem}
             open={openCreateDlg}
@@ -97,52 +92,46 @@ function IssuePage() {
             open={openModifyDlg}
             onClose={handleModifyDlgClose}
          />
-         <div className="issue-list-container">
-            {/* 할일 */}
-            {issueList.map((issue, index) => {
-               if (issue.issueStatus === "todo") {
-                  return (
-                     <React.Fragment key={index}>
-                        <Divider />
-                        <IssueCard
-                           info={issue}
-                           IssueModifyOpen={handleModifyDlgOpen}
-                        />
-                     </React.Fragment>
-                  );
-               }
-            })}
-            {/* 진행중 */}
-            {issueList.map((issue, index) => {
-               if (issue.issueStatus === "progress") {
-                  return (
-                     <React.Fragment key={index}>
-                        <Divider />
-                        <IssueCard
-                           info={issue}
-                           IssueModifyOpen={handleModifyDlgOpen}
-                        />
-                     </React.Fragment>
-                  );
-               }
-            })}
-            {/* 완료 */}
-            {issueList.map((issue, index) => {
-               if (issue.issueStatus === "done") {
-                  return (
-                     <React.Fragment key={index}>
-                        <Divider />
-                        <IssueCard
-                           info={issue}
-                           IssueModifyOpen={handleModifyDlgOpen}
-                        />
-                     </React.Fragment>
-                  );
-               }
-            })}
-         </div>
+         <FlexColumn>
+            <Button variant="outlined" onClick={handleCreateDlgOpen}>
+               새로 만들기
+            </Button>
+            <Container>
+               <IssueCardList
+                  Title={"할 일"}
+                  List={issueList.filter(
+                     (issue) => issue.issueStatus === "todo"
+                  )}
+                  IssueModifyOpen={handleModifyDlgOpen}
+               ></IssueCardList>
+               <IssueCardList
+                  Title={"진행 중"}
+                  List={issueList.filter(
+                     (issue) => issue.issueStatus === "progress"
+                  )}
+                  IssueModifyOpen={handleModifyDlgOpen}
+               ></IssueCardList>
+               <IssueCardList
+                  Title={"완료"}
+                  List={issueList.filter(
+                     (issue) => issue.issueStatus === "done"
+                  )}
+                  IssueModifyOpen={handleModifyDlgOpen}
+               ></IssueCardList>
+            </Container>
+         </FlexColumn>
       </div>
    );
 }
+
+export const FlexColumn = styled.div`
+   display: flex;
+   flex-direction: column;
+`;
+
+export const Container = styled.div`
+   display: flex;
+   justify-content: center;
+`;
 
 export default IssuePage;
